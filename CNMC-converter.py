@@ -1,7 +1,10 @@
 import pandas
 import numpy
+import sys
 
-df = pandas.read_csv('consumo_periodo_22-12-2020_13-01-2021.csv',
+filename = sys.argv[1]
+df = pandas.read_csv(filename,
+            engine='python',
             sep=' |;|:',
             header=0,
             parse_dates=['Fecha'],
@@ -15,9 +18,9 @@ df['Metodo_obtencion']='R'
 df['Fecha']=numpy.where(df['Hora']==0, df['Fecha'] - pandas.to_timedelta(1, unit='d'), df['Fecha'])
 df['Hora']=numpy.where(df['Hora']==0, 24, df['Hora'])
 
-print(df)
+outname = str(sys.argv[1]).split('.')[0]+ '_CNMC_formatted.' + str(sys.argv[1]).split('.')[1]
 
-df.to_csv('salida.csv',
+df.to_csv(outname,
    sep=';',
    decimal=',',
    date_format='%d/%m/%Y',
